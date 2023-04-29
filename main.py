@@ -33,7 +33,7 @@ def main():
     df5 = read_df(spark_session, path_episode, episode_schema)
     task6(df5, df3, path_task6)
     df6 = read_df(spark_session, path_ratings, ratings_schema)
-    task7(df6, df3, path_task7).show(150)
+    task7(df6, df3, path_task7)
     task8(df6, df3, path_task8)
 
 if __name__ == '__main__':

@@ -34,19 +34,23 @@ def task7(df_ratings, df_title, path_to_save):
     dec_num=(end-start)//10
     out_df=(join_df.select(primaryTitle,
                            averageRating,
+                           numVotes,
                            'decade').where(
                             (f.col(startYear).between(start,start+9)) |
                             (f.col(endYear).between(start,start+9)))
-                            .orderBy(averageRating, ascending=False).limit(10)
+                            .orderBy(f.col(averageRating).desc(),
+                            f.col(numVotes).desc()).limit(10)
                             .dropDuplicates())
     start+=10
     for _ in range(1,dec_num):
         decad_df=(join_df.select(primaryTitle,
                                 averageRating,
+                                numVotes,
                                 'decade').where(
                                             (f.col(startYear).between(start,start+9)) |
                                             (f.col(endYear).between(start,start+9)))
-                                             .orderBy(averageRating, ascending=False).limit(10)
+                                             .orderBy(f.col(averageRating).desc(),
+                                             f.col(numVotes).desc()).limit(10)
                                              .dropDuplicates())
         out_df=out_df.union(decad_df)
         start+=10

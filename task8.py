@@ -25,19 +25,22 @@ def task8(df_ratings, df_title, path_to_save):
     genres_set.remove('')
     join_df = df_title.join(df_ratings, on=tconst, how = 'inner').drop('Genres2')
     out_df=(join_df.select(primaryTitle,
-                           averageRating).where(
+                           averageRating,
+                           numVotes).where(
                            f.array_contains(f.col(genres),list(genres_set)[0]))
-                            .orderBy(averageRating, ascending=False).limit(10)
+                            .orderBy(f.col(averageRating).desc(),
+                                     f.col(numVotes).desc()).limit(10)
                             .dropDuplicates())
     out_df=out_df.withColumn('genre',f.lit(list(genres_set)[0]))
     for i in range(1, len(genres_set)):
         genre_df=(join_df.select(primaryTitle,
-                           averageRating).where(
+                           averageRating,
+                           numVotes).where(
                            f.array_contains(f.col(genres),list(genres_set)[i]))
-                            .orderBy(averageRating, ascending=False).limit(10)
+                            .orderBy(f.col(averageRating).desc(),
+                                     f.col(numVotes).desc()).limit(10)
                             .dropDuplicates())
         genre_df=genre_df.withColumn('genre',f.lit(list(genres_set)[i]))
         out_df=out_df.union(genre_df)
     out_df.write.csv(path_to_save, header=True, mode='overwrite')
-    print(len(genres_set))
     return out_df
