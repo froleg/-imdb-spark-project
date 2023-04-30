@@ -32,6 +32,7 @@ def task7(df_ratings, df_title, path_to_save):
     start = min_year//10*10
     end = (max_year//10)*10
     dec_num=(end-start)//10
+    # by popularity definition: 1. the fact that something or someone is liked, enjoyed, or supported by many people
     out_df=(join_df.select(primaryTitle,
                            averageRating,
                            numVotes,
